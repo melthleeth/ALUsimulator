@@ -1,6 +1,8 @@
 # ALUsimulator
 Computer Architecture Team Project #1
 
+- [ ] 보고서 작성
+
 ### 기본기능
 - [X] 이진수 변환
 - [X] 십진수 변환
@@ -19,6 +21,7 @@ Computer Architecture Team Project #1
 - [ ] 곱셈 연산
 - [ ] 나눗셈 연산
 - [ ] 상태비트 출력 (C, V, S, Z)
+
 
 ## member
 이혜진(@melthleeth) <br>
