@@ -12,6 +12,7 @@ Computer Architecture Team Project #1
 
 ### 추가기능
 > IEEE754
+
 - [ ] bias -127과 IEEE754를 적용한 32비트로의 변환
 - [ ] 다시 십진수로의 변환
 - [ ] 덧셈(뺄셈) 연산
