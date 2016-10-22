@@ -7,11 +7,14 @@ void main() {
 	int	bin[32] = {0, };
 	int bin2[32] = {0, };
 
+	int c[32] = {0, };
+	int math[32] = {0, };
+
 	cin >> a >> b;
 
 	while(true)	{
-		int mogc = a/2;		// ¸ò
-		int nmg = a%2;		// ³ª¸ÓÁö
+		int mogc = a/2;		// 
+		int nmg = a%2;		// ë‚˜ë¨¸
 		bin[count] = nmg;
 		count--;
 
@@ -34,7 +37,7 @@ void main() {
 	}
 
 
-//	È®ÀÎ====================================
+//	2ì§„ ===========================
 	for(int i=0; i<32; i++){
 		cout << bin[i];
 		if(i==31){
@@ -49,6 +52,30 @@ void main() {
 	}
 //==========================================
 
+	cout << "=======================================" << endl;
+
+	cout << "ë§"  << endl;
+
+	for(int i=31; i>=0; i--){
+		math[i] = bin[i]+bin2[i]+c[i];
+		if(math[i]==2){
+			math[i]=0;
+			++c[i-1];
+		}
+		if(math[i]==3){
+			math[i]=1;
+			++c[i-1];
+		}
+	}
+
+	for(int i=0; i<32; i++){
+		cout << math[i];
+		if(i==31){
+			cout<<endl;
+		}
+	}
+	
+	cout << "======================================"<<endl;
 
 
 }
