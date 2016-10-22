@@ -13,8 +13,8 @@ void main() {
 	cin >> a >> b;
 
 	while(true)	{
-		int mogc = a/2;		// ¸ò
-		int nmg = a%2;		// ³ª¸ÓÁö
+		int mogc = a/2;		// 
+		int nmg = a%2;		// ë‚˜ë¨¸
 		bin[count] = nmg;
 		count--;
 
@@ -37,7 +37,7 @@ void main() {
 	}
 
 
-//	È®ÀÎ====================================
+//	2ì§„ ===========================
 	for(int i=0; i<32; i++){
 		cout << bin[i];
 		if(i==31){
@@ -54,7 +54,7 @@ void main() {
 
 	cout << "=======================================" << endl;
 
-	cout << "µ¡¼À" << endl;
+	cout << "ë§" << endl;
 
 	for(int i=31; i>=0; i--){
 		math[i] = bin[i]+bin2[i]+c[i];
