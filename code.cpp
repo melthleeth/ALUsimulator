@@ -10,8 +10,7 @@
 #define SIZE 32 // 레지스터 최대길이: 32비트
 using namespace std;
 
-int *convert_complement(int *arr) {
-	/* 2의 보수 변환 */
+int *convert_complement(int *arr) { /* 2의 보수 변환 */
 
 	/* STEP 1: 비트반전(1의 보수) */
 	for (int i = 0; i < SIZE; i++) {
@@ -46,9 +45,8 @@ int *convert_binary(int num, int *arr) {
 	int k = SIZE - 1; // 카운팅용 변수
 	bool minus = false;
 
-	if (num < 0) {
+	if (num < 0) { // 음수판별 --> 추후 2의 보수로 바꿀지 결정하는데 사용됨
 		num = num * (-1);
-		//cout << num;
 		minus = true;
 	}
 
@@ -66,7 +64,7 @@ int *convert_binary(int num, int *arr) {
 		else k--;
 	}
 
-	if (minus) {
+	if (minus) { // 위에서 음수라는게 확인되었다면 2의 보수로 변환됨
 		convert_complement(arr);
 	}
 	//// ****출력 잘되는지 확인용****
@@ -79,7 +77,40 @@ int *convert_binary(int num, int *arr) {
 	return arr;
 }
 
+int *sum(int *arr1, int *arr2) { /* 덧셈연산 */
+	int result[SIZE]; // 결과 저장용 배열
+	
+	for (int i = 0; i < SIZE; i++) // 배열 초기화
+		result[i] = 0;
 
+	for (int i = SIZE - 1; i >= 0; i--) {
+		int sum = arr1[i] + arr2[i]; // 자릿수 합 저장
+		int temp = sum + result[i]; // 자리올림 발생할 수 있으므로 변수 하나 더 정의
+		
+
+		if (temp == 1 || temp == 0)
+			result[i] = temp;
+		if (temp == 2) {
+			result[i] = 0;
+			if (i != 0) result[i - 1] = 1; // array index 가 -1 이 되는 것을 방지
+			else break;
+		}
+		if (temp == 3) {
+			result[i] = 1;
+			if (i != 0) result[i - 1] = 1;
+			else break;
+		}
+		//cout << sum << " " << temp << " " << result[i] << endl;
+	}
+
+	cout << "함수 안에서 덧셈 후" << endl;
+	 for (int i = 0; i < SIZE; i++)
+		cout << result[i];
+
+	 cout << endl;
+
+	return result;
+}
 
 void main() {
 	int a; 
@@ -90,7 +121,7 @@ void main() {
 	cout << "두 수를 입력하세요: ";
 	cin >> a >> b;
 	
-	int *x	 = convert_binary(a, A);
+	int *x = convert_binary(a, A);
 	int *y = convert_binary(b, B);
 
 
@@ -106,21 +137,12 @@ void main() {
 		cout << y[i];
 	cout << endl;
 
+	int *result = sum(x, y);
+	cout << "두 수의 덧셈: " << endl;
+	for (int i = 0; i < SIZE; i++)
+		cout << result[i];
 	cout << endl;
 
-	/*
-	convert_complement(x);
-	cout << "[" << a <<  "]의 2의 보수: " << endl;
-	for (int i = 0; i < SIZE; i++)
-		cout << x[i];
-	cout << endl;
-
-	convert_complement(y);
-	cout << "[" << b << "]의 2의 보수: " << endl;
-	for (int i = 0; i < SIZE; i++)
-		cout << y[i];
-	cout << endl;
-	*/
 	
 	return;
 }
