@@ -1,9 +1,9 @@
 /*
 만들어야 할 기능:
 이진수 변환(O)
-2의 보수 변환
-덧셈/뺄셈: 병렬 가감산기
-곱셈은 Booth alg로
+2의 보수 변환(O)
+덧셈/뺄셈(O)
+곱셈/나눗셈
 */
 
 #include <iostream>
@@ -77,8 +77,8 @@ int *convert_binary(int num, int *arr) {
 	return arr;
 }
 
-int *sum(int *arr1, int *arr2) { /* 덧셈연산 */
-	int result[SIZE]; // 결과 저장용 배열
+int *sum(int *arr1, int *arr2, int *result) { /* 덧셈연산 */
+	//int result[SIZE]; // 결과 저장용 배열
 	
 	for (int i = 0; i < SIZE; i++) // 배열 초기화
 		result[i] = 0;
@@ -103,11 +103,11 @@ int *sum(int *arr1, int *arr2) { /* 덧셈연산 */
 		//cout << sum << " " << temp << " " << result[i] << endl;
 	}
 
-	cout << "함수 안에서 덧셈 후" << endl;
-	 for (int i = 0; i < SIZE; i++)
-		cout << result[i];
+	//cout << "함수 안에서 덧셈 후" << endl;
+	// for (int i = 0; i < SIZE; i++)
+	//	cout << result[i];
 
-	 cout << endl;
+	// cout << endl;
 
 	return result;
 }
@@ -117,6 +117,7 @@ void main() {
 	int b;
 	int A[SIZE];
 	int B[SIZE];
+	int sumarr[SIZE]; // 덧셈결과 저장 배열
 
 	cout << "두 수를 입력하세요: ";
 	cin >> a >> b;
@@ -137,8 +138,8 @@ void main() {
 		cout << y[i];
 	cout << endl;
 
-	int *result = sum(x, y);
-	cout << "두 수의 덧셈: " << endl;
+	int *result = sum(x, y, sumarr);
+	cout << "함수 밖에서 덧셈 후" << endl;
 	for (int i = 0; i < SIZE; i++)
 		cout << result[i];
 	cout << endl;
