@@ -23,7 +23,7 @@ Computer Architecture Team Project #1
 - [ ] 상태비트 출력 (C, V, S, Z)
 
 
-## member
+## member(GROUP 6)
 이혜진(@melthleeth) <br>
 변재호(@bjho606) <br>
 방승희(@tmdgml) <br>
