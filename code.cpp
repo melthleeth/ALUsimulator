@@ -1,20 +1,19 @@
 /*
-¸¸µé¾î¾ß ÇÒ ±â´É:
-ÀÌÁø¼ö º¯È¯
-º¸¼ö º¯È¯
-µ¡¼À/»¬¼À: º´·Ä °¡°¨»ê±â
-°ö¼ÀÀº Booth alg·Î
+ë§Œë“¤ì–´ì•¼ í•  ê¸°ëŠ¥:
+ì´ì§„ìˆ˜ ë³€í™˜(O)
+2ì˜ ë³´ìˆ˜ ë³€í™˜(O)
+ë§ì…ˆ/ëº„ì…ˆ: ë³‘ë ¬ ê°€ê°ì‚°ê¸°
+ê³±ì…ˆì€ Booth algë¡œ
 */
 
 #include <iostream>
-#define SIZE 32 // ·¹Áö½ºÅÍ ÃÖ´ë±æÀÌ: 32ºñÆ®
+#define SIZE 32 // ë ˆì§€ìŠ¤í„° ìµœëŒ€ê¸¸ì´: 32ë¹„íŠ¸
 using namespace std;
 
 int *convert_binary(int num, int *arr) {
-	//int arr[SIZE];
-	int k = SIZE - 1; // Ä«¿îÆÃ¿ë º¯¼ö
+	int k = SIZE - 1; // ì¹´ìš´íŒ…ìš© ë³€ìˆ˜
 
-	for (int i = 0; i < SIZE; i++) // ¹è¿­ ¸ğµÎ 0À¸·Î Ã¤¿ò
+	for (int i = 0; i < SIZE; i++) // ë°°ì—´ ëª¨ë‘ 0ìœ¼ë¡œ ì±„ì›€
 		arr[i] = 0;
 
 	while (1) {
@@ -27,7 +26,7 @@ int *convert_binary(int num, int *arr) {
 		}
 		else k--;
 	}
-	//// ****Ãâ·Â ÀßµÇ´ÂÁö È®ÀÎ¿ë****
+	//// ****ì¶œë ¥ ì˜ë˜ëŠ”ì§€ í™•ì¸ìš©****
 	//for (int i = 0; i < SIZE; i++) {
 	//	cout << arr[i];
 	//	if (i % 4 == 3) cout << "|";
@@ -36,25 +35,73 @@ int *convert_binary(int num, int *arr) {
 	return arr;
 }
 
+int *convert_complement(int *arr) {
+	/* 2ì˜ ë³´ìˆ˜ ë³€í™˜ */
+
+	/* STEP 1: ë¹„íŠ¸ë°˜ì „(1ì˜ ë³´ìˆ˜) */
+	for (int i = 0; i < SIZE; i++) {
+		if (arr[i] == 0)
+			arr[i] = 1;
+		else if (arr[i] == 1)
+			arr[i] = 0;
+		//cout << arr[i];
+	}
+
+	/* STEP 2: +1í•´ì„œ 2ì˜ ë³´ìˆ˜ë¡œ ë§Œë“¦ */
+	arr[SIZE - 1]++;
+
+	for (int i = SIZE - 1; i >= 0; i--) {
+		if (arr[i] == 1)
+			break;
+		else if (arr[i] == 2) {
+			arr[i] = 0;
+			arr[i - 1]++;
+		}
+		else if (arr[i] == 3) {
+			arr[i] = 1;
+			arr[i - 1]++;
+		}
+	}
+
+	return arr;
+}
 
 void main() {
 	int a; 
 	int b;
-	int arr[SIZE];
+	int A[SIZE];
+	int B[SIZE];
 
-	cout << "µÎ ¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä: ";
+	cout << "ë‘ ìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”: ";
 	cin >> a >> b;
 	
-	int *x = convert_binary(a, arr);
-	int *y = convert_binary(b, arr);
+	int *x	 = convert_binary(a, A);
+	int *y = convert_binary(b, B);
+
+
+	cout << "[" << a << "]ì˜ 2ì§„ìˆ˜ ë³€í™˜" << endl;
+	for (int i = 0; i < SIZE; i++)
+		cout << x[i];
+	cout << endl;
+
+	cout << "[" << b << "]ì˜ 2ì§„ìˆ˜ ë³€í™˜" << endl;
+	for (int i = 0; i < SIZE; i++)
+		cout << y[i];
+	cout << endl;
+
+	cout << endl;
+
+	convert_complement(x);
+	cout << "[" << a <<  "]ì˜ 2ì˜ ë³´ìˆ˜: " << endl;
+	for (int i = 0; i < SIZE; i++)
+		cout << x[i];
+	cout << endl;
+
+	convert_complement(y);
+	cout << "[" << b << "]ì˜ 2ì˜ ë³´ìˆ˜: " << endl;
+	for (int i = 0; i < SIZE; i++)
+		cout << y[i];
+	cout << endl;
 	
-	//cout << endl;
-
-	//// Ãâ·ÂÈ®ÀÎ¿ë
-	//for (int i = 0; i < SIZE; i++)
-	//	cout << k[i];
-	//cout << endl;
-	//// ****
-
 	return;
 }
