@@ -1,4 +1,9 @@
 # ALUsimulator
 Computer Architecture Team Project
 
-- 이진수 변환함수 완료
+- [O] 이진수 변환
+- [O] 보수 연산
+- [ ] 덧셈 연산
+- [ ] 뺄셈 연산
+- [ ] 곱셈 by Booth Algorithm
+- [ ] 나눗셈
