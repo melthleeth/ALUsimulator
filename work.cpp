@@ -54,7 +54,7 @@ void main() {
 
 	cout << "=======================================" << endl;
 
-	cout << "덧" << endl;
+	cout << "덧"  << endl;
 
 	for(int i=31; i>=0; i--){
 		math[i] = bin[i]+bin2[i]+c[i];
