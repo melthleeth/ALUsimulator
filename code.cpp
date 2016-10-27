@@ -257,6 +257,7 @@ int *mul(int *Q, int *M, int *A, int *result, int size) { /* 곱셈 by BOOTH Alg
 			ASR(A, Q, prev, size);
 			//print(A, Q, prev);
 		}
+
 		else if (Q[size - 1] == 1 && prev == 1) { // 11일 경우 - just ASR
 			cout << "<11일 경우>\n";
 			ASR(A, Q, prev, size);
@@ -300,6 +301,172 @@ int *mul(int *Q, int *M, int *A, int *result, int size) { /* 곱셈 by BOOTH Alg
 	//	cout << result[i];
 
 	return result;
+}
+
+double ieee_to_10(int* arr) {
+
+	int sum_up = 0;
+	int temp = 0;
+	int arr_down[24] = { 0 };
+	double a = 0, b = 0;
+	int i = 0, j = 0;
+
+	for (i = 8, j = 0; i > 0; i--, j++) { //지수부의 10진수 화
+		sum_up += arr[i] * pow(2, j);
+	}
+
+	for (i = (SIZE - 1); i >= 0; i--) { //x의 가수부 길이 구하기
+		if (arr[i] == 1) {
+
+			break;
+		}
+		else {
+			temp++;
+		}
+	}
+
+	temp = SIZE - 9 - temp;
+
+	for (i = 0; i < temp; i++) { //가수부 넣을 새로운 배열 추가
+		arr_down[1 + i] = arr[9 + i];
+	}
+	arr_down[0] = 1; //생략되었던 1 추가
+
+	for (i = sum_up, j = 0; i >= 0; i--, j++) {//정수부 합
+		a += arr_down[i] * pow(2, j);
+	}
+
+	for (i = sum_up + 1, j = 0; i < 24; i++, j++) {//소수부 합
+		b += arr_down[i] * pow(2, -1 * j);
+	}
+
+	return a + b;
+}
+
+void *ieee_sum(int *x, int *y) {
+	int sum_up_X = 0, sum_up_Y = 0, length_down_X = 0, length_down_Y = 0;
+	int sub_up_XY = 0, sub_up_YX = 0;
+	int *sum_down = { 0 };
+	int sum_final[32] = { 0 };
+	int temp = 0;
+	int A[8] = { 0 };
+	int *sum_up_final = { 0 };
+	int *x_3 = { 0 };
+	int *y_3 = { 0 };
+	int j = 0;
+	int i = 0;
+
+	for (i = 8, j = 0; i > 0; i--, j++) { //지수부의 10진수 화
+		sum_up_X += x[i] * pow(2, j);
+		sum_up_Y += y[i] * pow(2, j);
+	}
+
+	for (i = (SIZE - 1); i >= 0; i--) { //x의 가수부 길이 구하기
+		if (x[i] == 1) {
+
+			break;
+		}
+		else {
+			length_down_X++;
+		}
+	}
+
+	for (i = (SIZE - 1); i >= 0; i--) {
+		if (y[i] == 1) {
+
+			break;
+		}
+		else {
+			length_down_Y++;
+		}
+	}
+
+	length_down_X = SIZE - 9 - length_down_X; //가수부 길이 계산
+	length_down_Y = SIZE - 9 - length_down_Y;
+
+	sum_up_X = sum_up_X - 127 - length_down_X;
+	sum_up_Y = sum_up_Y - 127 - length_down_Y; //소숫점 위치 맞춘 후의 지수 값 계산
+
+	if (sum_up_X >= sum_up_Y) {//지수끼리의 차 구하기
+		sub_up_XY = sum_up_X - sum_up_Y;
+
+	}
+	else {
+		sub_up_YX = sum_up_Y - sum_up_X;
+	}
+
+	if (sub_up_XY == 0) {
+		sum_up_X = sum_up_Y;
+	}
+	else {
+		sum_up_X = sum_up_X;
+	}
+
+	sum_up_final = convert_binary(sum_up_X, A, 8);
+
+
+
+	int x_2[32] = { 0 };
+	int y_2[32] = { 0 }; //////////////////////////////////////////////////////////////동적할당 
+
+	for (i = 0, j = 31; i < sub_up_XY; i++, j--) {
+		x_2[j] = 0;
+	}
+	for (i = 0, j = length_down_X; j >= 0; i++, j--) {
+		if (j = 0) {
+			x_2[31 - sub_up_XY - i] = 1;//생략된 1 넣기
+			x_2[30 - sub_up_XY - i] = x[0];//맨 앞에 부호비트 넣기
+			break;
+		}
+		x_2[31 - sub_up_XY - i] = x[8 + length_down_X - i];
+	}
+
+	for (i = 0, j = 31; i < sub_up_YX; i++, j--) {
+		y_2[j] = 0;
+	}
+	for (i = 0, j = length_down_Y; j>-0; i++, j--) {
+		if (j = 0) {
+			y_2[31 - sub_up_XY - i] = 1; //생략된 1 넣기
+			y_2[30 - sub_up_XY - i] = y[0]; //맨 앞에 부호비트 넣기
+			break;
+		}
+		y_2[31 - sub_up_YX - i] = y[8 + length_down_Y - i];
+	}
+
+	sum(x_2, y_2,sum_down,32,0);
+
+
+	for (i = 0; i < 32; i++) {//가수부 합의 길이 구하기
+		if (sum_down[i] == 1) {
+			break;
+		}
+		temp++;
+	}
+
+	temp = 32 - temp;
+
+	sum_up_X = temp - sum_up_X; //지수부 정규화
+
+	for (i = 0; temp + i < 32; i++) {
+		sum_final[9 + i] = sum_down[temp + 2 + i]; //첫 숫자 2개(부호비트, 1생략)를 빼야하므로 sum_down[temp+2+i]
+	}
+
+	for (i = 0; i < 8; i++) {
+		sum_final[1 + i] = sum_up_final[i];
+	}
+
+	sum_final[0] = sum_down[temp]; //부호비트 넣기
+
+								   /////////////////////////////////////////////////////////////////////예외처리하기
+
+	for (i = 0; i < 32; i++) {
+		cout << "계산 후 ieee754형식 : " << sum_final[i] << endl;
+	}
+
+	cout << "계산 후 10진수 형식 : " << ieee_to_10(sum_final);
+
+
+	return 0;
 }
 
 void main() {
