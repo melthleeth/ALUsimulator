@@ -215,13 +215,51 @@ void ASR(int *A, int *Q, int &prev, int size) { /* Arithmatic Shift-Right - 적�
 	cout << prev << endl;
 }
 
+void SL(int *A, int *Q, int size) { /* Shift Left */
+	cout << "<Shift Left>" << endl;
+
+	cout << "A 전출력 확인: ";
+	for (int i = 0; i < size; i++)
+		cout << A[i];
+	cout << endl;
+
+	for (int i = 0; i < size - 1; i++)
+		A[i] = A[i + 1];
+	A[size - 1] = Q[0];
+
+	cout << "A 후출력 확인: ";
+	for (int i = 0; i < size; i++)
+		cout << A[i];
+	cout << endl;
+
+	cout << "Q 전출력 확인: ";
+	for (int i = 0; i < size; i++)
+		cout << Q[i];
+	cout << endl;
+
+	for (int i = 0; i < size - 1; i++)
+		Q[i] = Q[i + 1];
+	Q[size - 1] = 0;
+
+	cout << "Q 후출력 확인: ";
+	for (int i = 0; i < size; i++)
+		cout << Q[i];
+	cout << endl;
+
+	cout << "SL 수행 결과: ";
+	for (int i = 0; i < size; i++) cout << A[i];
+	cout << " ";
+	for (int i = 0; i < size; i++) cout << Q[i];
+	cout << " ";
+}
+
 int *mul(int *Q, int *M, int *A, int *result, int size) { /* 곱셈 by BOOTH Alg. - 계산할 이진수 배열 2개, A레지스터, Q레지스터 */
 	int prev = 0; // Q_-1 값 저장할 변수
 	int init_M = M[0]; // M의 처음 부호비트
 	
 	/* STEP 1: A레지스터 값 설정, M레지스터 보수값 미리 구해놓기 */
-	for (int i = 0; i < size; i++)
-		A[i] = Q[0]; 
+/*	for (int i = 0; i < size; i++)
+		A[i] = Q[0];*/ // 이건 나눗셈용! 곱셈은 무조건 전부 0으로 채움
 	
 	int *M_cpl = convert_complement(M, size); // M의 2의 보수
 	int init_Mcpl = M_cpl[0]; // M'의 처음 부호비트
@@ -239,7 +277,7 @@ int *mul(int *Q, int *M, int *A, int *result, int size) { /* 곱셈 by BOOTH Alg
 	/* STEP 2: Q레지스터 비트 크기(SIZE/2 = 16)만큼 cycle 반복 */
 
 	int A_result[SIZE / 2] = { 0 }; // A레지스터 연산 결과 저장할 임시 변수
-	int *R = { 0 };
+	int *R = { 0 }; // 임시 변수
 
 	for (int i = 0; i < size; i++) {
 
@@ -302,17 +340,64 @@ int *mul(int *Q, int *M, int *A, int *result, int size) { /* 곱셈 by BOOTH Alg
 	return result;
 }
 
+int *div(int *Q, int *M, int *A, int *result, int size) { /* 나눗셈 - 계산할 이진수 배열 2개, A레지스터, Q레지스터 */
+	/* STEP 1: A레지스터 값 설정, M레지스터 보수값 미리 구해놓기 */
+	int compare[SIZE / 2] = { 0 }; // A, M 연산값이랑 비교할 배열
+
+	for (int i = 0; i < size; i++) {
+		A[i] = Q[0];
+		compare[i] = M[0];
+	}
+
+	//cout << ""
+	for (int i = 0; i < size; i++)
+		cout << compare[i];
+
+	int init_A = A[0];
+
+	int *M_cpl = convert_complement(M, size); // M의 2의 보수
+	int init_Mcpl = M_cpl[0]; // M'의 처음 부호비트
+
+	/* STEP 2: Q레지스터 비트 크기(SIZE/2 = 16)만큼 cycle 반복 */
+
+	for (int i = 0; i < size; i++) {
+		SL(A, Q, size);
+
+		if ()
+	}
+
+	/* STEP 3: A와 Q레지스터 합쳐서 결과레지스터에 저장 */
+	for (int i = 0; i < size; i++) {
+		result[i] = A[i];
+		//cout << result[i];
+		//if (i % 4 == 3) cout << "_";
+	}
+	for (int j = 0; j < size; j++) {
+		result[j + size] = Q[j];
+		//cout << result[j + size];
+		//if (j % 4 == 3) cout << "_";
+	}
+	return result;
+}
+
 void main() {
 	int a; 
 	int b;
 	int A[SIZE] = { 0 };
 	int B[SIZE] = { 0 };
 	int sumarr[SIZE] = { 0 }; // 덧셈결과 저장 배열
-	/* 곱셈연산용 변수 */
+	
+	/* 곱셈연산용 변수 - 결과값은 32bit지만 A,Q는 16bit여야함 */
 	int a_register[SIZE / 2] = { 0 };
 	int q_register[SIZE / 2] = { 0 };
 	int m_register[SIZE / 2] = { 0 };
 	int result_mul[SIZE] = { 0 };
+
+	/* 나눗셈연산용 변수 - 결과값은 32bit지만 A,Q는 16bit여야함 */
+	int a_reg[SIZE / 2] = { 0 };
+	int q_reg[SIZE / 2] = { 0 };
+	int m_reg[SIZE / 2] = { 0 };
+	int result_div[SIZE] = { 0 };
 
 	cout << "두 수를 입력하세요: ";
 	cin >> a >> b;
