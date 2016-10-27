@@ -1,14 +1,14 @@
 /*
-¸¸µé¾î¾ß ÇÒ ±â´É:
-ÀÌÁø¼ö º¯È¯(O)
-2ÀÇ º¸¼ö º¯È¯
-µ¡¼À/»¬¼À: º´·Ä °¡°¨»ê±â
-°ö¼ÀÀº Booth alg·Î
+ë§Œë“¤ì–´ì•¼ í•  ê¸°ëŠ¥:
+ì´ì§„ìˆ˜ ë³€í™˜(O)
+2ì˜ ë³´ìˆ˜ ë³€í™˜
+ë§ì…ˆ/ëº„ì…ˆ: ë³‘ë ¬ ê°€ê°ì‚°ê¸°
+ê³±ì…ˆì€ Booth algë¡œ
 */
 
 #include <iostream>
 #include <cmath>
-#define SIZE 32 // ·¹Áö½ºÅÍ ÃÖ´ë±æÀÌ: 32ºñÆ®
+#define SIZE 32 // ë ˆì§€ìŠ¤í„° ìµœëŒ€ê¸¸ì´: 32ë¹„íŠ¸
 using namespace std;
 
 int *convert_ieee(int *arr, int count1, int count2, bool minus);
@@ -16,10 +16,11 @@ void Signbit(int num);
 void Carrybit(int num);
 void Zerobit(int *num);
 void Overbit(int carry1, int carry2);
+bool ieee_exception(int *arr);
 
-int *convert_complement(int *arr, int size) { /* 2ÀÇ º¸¼ö º¯È¯ */
+int *convert_complement(int *arr, int size) { /* 2ì˜ ë³´ìˆ˜ ë³€í™˜ */
 
-											  /* STEP 1: ºñÆ®¹İÀü(1ÀÇ º¸¼ö) */
+											  /* STEP 1: ë¹„íŠ¸ë°˜ì „(1ì˜ ë³´ìˆ˜) */
 	for (int i = 0; i < size; i++) {
 		if (arr[i] == 0)
 			arr[i] = 1;
@@ -28,7 +29,7 @@ int *convert_complement(int *arr, int size) { /* 2ÀÇ º¸¼ö º¯È¯ */
 		//cout << arr[i];
 	}
 
-	/* STEP 2: +1ÇØ¼­ 2ÀÇ º¸¼ö·Î ¸¸µê */
+	/* STEP 2: +1í•´ì„œ 2ì˜ ë³´ìˆ˜ë¡œ ë§Œë“¦ */
 	arr[size - 1]++;
 
 	for (int i = size - 1; i >= 0; i--) {
@@ -47,31 +48,31 @@ int *convert_complement(int *arr, int size) { /* 2ÀÇ º¸¼ö º¯È¯ */
 	return arr;
 }
 
-int *sum(int *arr1, int *arr2, int* result, int size, bool status) { /* µ¡¼À¿¬»ê */
-																	 //int result[SIZE]; // °á°ú ÀúÀå¿ë ¹è¿­
+int *sum(int *arr1, int *arr2, int* result, int size, bool status) { /* ë§ì…ˆì—°ì‚° */
+																	 //int result[SIZE]; // ê²°ê³¼ ì €ì¥ìš© ë°°ì—´
 	int carry1 = 0;
 	int carry2 = 0;
 
-	// °á°ú°ª ´ãÀ» ¹è¿­ ÃÊ±âÈ­
+	// ê²°ê³¼ê°’ ë‹´ì„ ë°°ì—´ ì´ˆê¸°í™”
 	for (int i = 0; i < size; i++)
 		result[i] = 0;
 
-	cout << "¿ø·¡ °ª: ";
+	cout << "ì›ë˜ ê°’: ";
 	for (int i = 0; i < size; i++) cout << arr1[i];
-	cout << "\n´õÇÒ ¾Ö: ";
+	cout << "\në”í•  ì• : ";
 	for (int i = 0; i < size; i++) cout << arr2[i];
 	cout << endl;
 
 	for (int i = size - 1; i >= 0; i--) {
-		int sum = arr1[i] + arr2[i]; // ÀÚ¸´¼ö ÇÕ ÀúÀå
-		int temp = sum + result[i]; // ÀÚ¸®¿Ã¸² ¹ß»ıÇÒ ¼ö ÀÖÀ¸¹Ç·Î º¯¼ö ÇÏ³ª ´õ Á¤ÀÇ
+		int sum = arr1[i] + arr2[i]; // ìë¦¿ìˆ˜ í•© ì €ì¥
+		int temp = sum + result[i]; // ìë¦¬ì˜¬ë¦¼ ë°œìƒí•  ìˆ˜ ìˆìœ¼ë¯€ë¡œ ë³€ìˆ˜ í•˜ë‚˜ ë” ì •ì˜
 
 
 		if (temp == 1 || temp == 0)
 			result[i] = temp;
 		else if (temp == 2) {
 			result[i] = 0;
-			if (i != 0) result[i - 1] = 1; // array index °¡ -1 ÀÌ µÇ´Â °ÍÀ» ¹æÁö
+			if (i != 0) result[i - 1] = 1; // array index ê°€ -1 ì´ ë˜ëŠ” ê²ƒì„ ë°©ì§€
 			else break;
 		}
 		else if (temp == 3) {
@@ -82,23 +83,23 @@ int *sum(int *arr1, int *arr2, int* result, int size, bool status) { /* µ¡¼À¿¬»ê
 		//cout << sum << " " << temp << " " << result[i] << endl;
 	}
 
-	//cout << "ÇÔ¼ö ¾È¿¡¼­ µ¡¼À ÈÄ" << endl;
+	//cout << "í•¨ìˆ˜ ì•ˆì—ì„œ ë§ì…ˆ í›„" << endl;
 	// for (int i = 0; i < SIZE; i++)
 	//   cout << result[i];
 
 	// cout << endl;
-	//°á°ú°ª Ãâ·Â
-	if (status) { //µ¡¼ÀÀÏ ¶§
-		cout << "µ¡¼À °á°ú : ";
+	//ê²°ê³¼ê°’ ì¶œë ¥
+	if (status) { //ë§ì…ˆì¼ ë•Œ
+		cout << "ë§ì…ˆ ê²°ê³¼ : ";
 		for (int i = 0; i < size; i++)
 			cout << result[i];
 		cout << endl;
 
-		//ºñÆ®°ª Ãâ·Â
+		//ë¹„íŠ¸ê°’ ì¶œë ¥
 		Carrybit(carry2);
 		Signbit(result[0]);
 		Zerobit(result);
-		Overbit(carry1, carry1); //carry1Àº ³»ºÎÄ³¸®, carry2´Â ¿ÜºÎÄ³¸®
+		Overbit(carry1, carry1); //carry1ì€ ë‚´ë¶€ìºë¦¬, carry2ëŠ” ì™¸ë¶€ìºë¦¬
 	}
 	//   cout << carry1 << endl;
 	//   cout << carry2 << endl;
@@ -106,18 +107,18 @@ int *sum(int *arr1, int *arr2, int* result, int size, bool status) { /* µ¡¼À¿¬»ê
 	return result;
 }
 
-int convert_decimal(int *arr, int size) { /* ½ÊÁø¼ö º¯È¯ - °è»êÇÒ ¶§ »ç¿ëµÉ ¹è¿­ */
-	int result = 0; // °á°ú°ª ÀúÀå
-	bool negative = false; // ¾ç¼ö À½¼ö ÆÇ´Ü º¯¼ö
+int convert_decimal(int *arr, int size) { /* ì‹­ì§„ìˆ˜ ë³€í™˜ - ê³„ì‚°í•  ë•Œ ì‚¬ìš©ë  ë°°ì—´ */
+	int result = 0; // ê²°ê³¼ê°’ ì €ì¥
+	bool negative = false; // ì–‘ìˆ˜ ìŒìˆ˜ íŒë‹¨ ë³€ìˆ˜
 
-						   /* STEP 1: ½ÊÁø¼ö º¯È¯À» À§ÇØ ¾ç¼ö·Î ¹Ù²ãÁÜ */
-	if (arr[0] == 1) { // ¸ÕÀú º¸¼ö·Î ¹Ù²ãÁÜ
+						   /* STEP 1: ì‹­ì§„ìˆ˜ ë³€í™˜ì„ ìœ„í•´ ì–‘ìˆ˜ë¡œ ë°”ê¿”ì¤Œ */
+	if (arr[0] == 1) { // ë¨¼ì € ë³´ìˆ˜ë¡œ ë°”ê¿”ì¤Œ
 		negative = true;
 		arr = convert_complement(arr, size);
 	}
 
-	/* STEP 2: ½ÊÁø¼ö º¯È¯ */
-	int k = 0; // Áö¼ö Ä«¿îÆÃ¿ë º¯¼ö
+	/* STEP 2: ì‹­ì§„ìˆ˜ ë³€í™˜ */
+	int k = 0; // ì§€ìˆ˜ ì¹´ìš´íŒ…ìš© ë³€ìˆ˜
 	for (int i = size - 1; i >= 0; i--) {
 		if (arr[i] == 1)
 			result = result + pow((double)2, k);
@@ -126,7 +127,7 @@ int convert_decimal(int *arr, int size) { /* ½ÊÁø¼ö º¯È¯ - °è»êÇÒ ¶§ »ç¿ëµÉ ¹è¿­
 
 	//cout << "result = " << result << endl;
 
-	if (negative) result = result * (-1); // ºÎÈ£ºñÆ®°¡ 1(À½¼ö)¿´´Ù¸é À½¼ö·Î ÃëÇØÁÜ
+	if (negative) result = result * (-1); // ë¶€í˜¸ë¹„íŠ¸ê°€ 1(ìŒìˆ˜)ì˜€ë‹¤ë©´ ìŒìˆ˜ë¡œ ì·¨í•´ì¤Œ
 
 	return result;
 }
@@ -136,8 +137,8 @@ void copy(int *original, int *object, int size) {
 		original[i] = object[i];
 }
 
-void print(int *A, int *Q, int prev) { // ¸Å¹ø ¾²±â ¹ø°Å·Î¿ì¹Ç·Î Ãâ·ÂÇÏ´Â ÇÔ¼ö µû·Î ¼±¾ğ
-									   //cout << "¼öÇà °á°ú: ";
+void print(int *A, int *Q, int prev) { // ë§¤ë²ˆ ì“°ê¸° ë²ˆê±°ë¡œìš°ë¯€ë¡œ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜ ë”°ë¡œ ì„ ì–¸
+									   //cout << "ìˆ˜í–‰ ê²°ê³¼: ";
 	for (int i = 0; i < SIZE / 2; i++) cout << A[i];
 	cout << " ";
 	for (int i = 0; i < SIZE / 2; i++) cout << Q[i];
@@ -145,11 +146,11 @@ void print(int *A, int *Q, int prev) { // ¸Å¹ø ¾²±â ¹ø°Å·Î¿ì¹Ç·Î Ãâ·ÂÇÏ´Â ÇÔ¼ö µ
 	cout << prev << endl;
 }
 
-void sprint(int *A, int *Q, int prev) { // A ¡¾ M ¼öÇà °á°ú Ãâ·Â
+void sprint(int *A, int *Q, int prev) { // A Â± M ìˆ˜í–‰ ê²°ê³¼ ì¶œë ¥
 	char sign;
 	if (prev == 0) sign = '-';
 	else if (prev == 1) sign = '+';
-	cout << "A" << sign << "M ¼öÇà °á°ú: ";
+	cout << "A" << sign << "M ìˆ˜í–‰ ê²°ê³¼: ";
 	for (int i = 0; i < SIZE / 2; i++) cout << A[i];
 	cout << " ";
 	for (int i = 0; i < SIZE / 2; i++) cout << Q[i];
@@ -157,14 +158,14 @@ void sprint(int *A, int *Q, int prev) { // A ¡¾ M ¼öÇà °á°ú Ãâ·Â
 	cout << prev << endl;
 }
 
-void ASR(int *A, int *Q, int &prev, int size) { /* Arithmatic Shift-Right - Àû¿ëµÉ ¹è¿­, Q_-1 °ª, ¹è¿­ Å©±â */
-												/*ÇÔ¼ö¸¦ ºüÁ®³ª°¡´Ï±î °ª ÀúÀåÀÌ ¾ÈµÊ. °ªÀ» ÀúÀåÇØ¼­ ¹ÛÀ¸·Î »©¾ßµÊ*/
+void ASR(int *A, int *Q, int &prev, int size) { /* Arithmatic Shift-Right - ì ìš©ë  ë°°ì—´, Q_-1 ê°’, ë°°ì—´ í¬ê¸° */
+												/*í•¨ìˆ˜ë¥¼ ë¹ ì ¸ë‚˜ê°€ë‹ˆê¹Œ ê°’ ì €ì¥ì´ ì•ˆë¨. ê°’ì„ ì €ì¥í•´ì„œ ë°–ìœ¼ë¡œ ë¹¼ì•¼ë¨*/
 
-	cout << "Àüprev°ª: " << prev << endl;
-	prev = Q[size - 1]; //  Q_-1¿¡ ¹è¿­ ³¡°ª ÀúÀå
-	cout << "ÈÄprev°ª: " << prev << endl;
+	cout << "ì „prevê°’: " << prev << endl;
+	prev = Q[size - 1]; //  Q_-1ì— ë°°ì—´ ëê°’ ì €ì¥
+	cout << "í›„prevê°’: " << prev << endl;
 
-	cout << "Q ÀüÃâ·Â È®ÀÎ: ";
+	cout << "Q ì „ì¶œë ¥ í™•ì¸: ";
 	for (int i = 0; i < size; i++)
 		cout << Q[i];
 	cout << endl;
@@ -173,12 +174,12 @@ void ASR(int *A, int *Q, int &prev, int size) { /* Arithmatic Shift-Right - Àû¿ë
 		Q[i] = Q[i - 1];
 	Q[0] = A[size - 1];
 
-	cout << "Q ÈÄÃâ·Â È®ÀÎ: ";
+	cout << "Q í›„ì¶œë ¥ í™•ì¸: ";
 	for (int i = 0; i < size; i++)
 		cout << Q[i];
 	cout << endl;
 
-	cout << "A ÀüÃâ·Â È®ÀÎ: ";
+	cout << "A ì „ì¶œë ¥ í™•ì¸: ";
 	for (int i = 0; i < size; i++)
 		cout << A[i];
 	cout << endl;
@@ -187,12 +188,12 @@ void ASR(int *A, int *Q, int &prev, int size) { /* Arithmatic Shift-Right - Àû¿ë
 		A[i] = A[i - 1];
 	//A[0] = A[1];
 
-	cout << "A ÈÄÃâ·Â È®ÀÎ: ";
+	cout << "A í›„ì¶œë ¥ í™•ì¸: ";
 	for (int i = 0; i < size; i++)
 		cout << A[i];
 	cout << endl;
 
-	cout << "ASR ¼öÇà °á°ú: ";
+	cout << "ASR ìˆ˜í–‰ ê²°ê³¼: ";
 	for (int i = 0; i < size; i++) cout << A[i];
 	cout << " ";
 	for (int i = 0; i < size; i++) cout << Q[i];
@@ -202,7 +203,7 @@ void ASR(int *A, int *Q, int &prev, int size) { /* Arithmatic Shift-Right - Àû¿ë
 void SL(int *A, int *Q, int size) { /* Shift Left */
 	cout << "<Shift Left>" << endl;
 
-	cout << "A ÀüÃâ·Â È®ÀÎ: ";
+	cout << "A ì „ì¶œë ¥ í™•ì¸: ";
 	for (int i = 0; i < size; i++)
 		cout << A[i];
 	cout << endl;
@@ -211,12 +212,12 @@ void SL(int *A, int *Q, int size) { /* Shift Left */
 		A[i] = A[i + 1];
 	A[size - 1] = Q[0];
 
-	cout << "A ÈÄÃâ·Â È®ÀÎ: ";
+	cout << "A í›„ì¶œë ¥ í™•ì¸: ";
 	for (int i = 0; i < size; i++)
 		cout << A[i];
 	cout << endl;
 
-	cout << "Q ÀüÃâ·Â È®ÀÎ: ";
+	cout << "Q ì „ì¶œë ¥ í™•ì¸: ";
 	for (int i = 0; i < size; i++)
 		cout << Q[i];
 	cout << endl;
@@ -225,86 +226,86 @@ void SL(int *A, int *Q, int size) { /* Shift Left */
 		Q[i] = Q[i + 1];
 	Q[size - 1] = 0;
 
-	cout << "Q ÈÄÃâ·Â È®ÀÎ: ";
+	cout << "Q í›„ì¶œë ¥ í™•ì¸: ";
 	for (int i = 0; i < size; i++)
 		cout << Q[i];
 	cout << endl;
 
-	cout << "SL ¼öÇà °á°ú: ";
+	cout << "SL ìˆ˜í–‰ ê²°ê³¼: ";
 	for (int i = 0; i < size; i++) cout << A[i];
 	cout << " ";
 	for (int i = 0; i < size; i++) cout << Q[i];
 	cout << " ";
 }
 
-int *mul(int *Q, int *M, int *A, int *result, int size) { /* °ö¼À by BOOTH Alg. - °è»êÇÒ ÀÌÁø¼ö ¹è¿­ 2°³, A·¹Áö½ºÅÍ, Q·¹Áö½ºÅÍ */
-	int prev = 0; // Q_-1 °ª ÀúÀåÇÒ º¯¼ö
-	int init_M = M[0]; // MÀÇ Ã³À½ ºÎÈ£ºñÆ®
+int *mul(int *Q, int *M, int *A, int *result, int size) { /* ê³±ì…ˆ by BOOTH Alg. - ê³„ì‚°í•  ì´ì§„ìˆ˜ ë°°ì—´ 2ê°œ, Aë ˆì§€ìŠ¤í„°, Që ˆì§€ìŠ¤í„° */
+	int prev = 0; // Q_-1 ê°’ ì €ì¥í•  ë³€ìˆ˜
+	int init_M = M[0]; // Mì˜ ì²˜ìŒ ë¶€í˜¸ë¹„íŠ¸
 
-					   /* STEP 1: A·¹Áö½ºÅÍ °ª ¼³Á¤, M·¹Áö½ºÅÍ º¸¼ö°ª ¹Ì¸® ±¸ÇØ³õ±â */
+					   /* STEP 1: Aë ˆì§€ìŠ¤í„° ê°’ ì„¤ì •, Më ˆì§€ìŠ¤í„° ë³´ìˆ˜ê°’ ë¯¸ë¦¬ êµ¬í•´ë†“ê¸° */
 	for (int i = 0; i < size; i++)
 		A[i] = Q[0];
 
-	int *M_cpl = convert_complement(M, size); // MÀÇ 2ÀÇ º¸¼ö
-	int init_Mcpl = M_cpl[0]; // M'ÀÇ Ã³À½ ºÎÈ£ºñÆ®
+	int *M_cpl = convert_complement(M, size); // Mì˜ 2ì˜ ë³´ìˆ˜
+	int init_Mcpl = M_cpl[0]; // M'ì˜ ì²˜ìŒ ë¶€í˜¸ë¹„íŠ¸
 
-	cout << "\n\n[°ö¼À]MÀÇ 2ÀÇ º¸¼ö: ";
+	cout << "\n\n[ê³±ì…ˆ]Mì˜ 2ì˜ ë³´ìˆ˜: ";
 	for (int i = 0; i < size; i++)
 		cout << M_cpl[i];
 
 	cout << endl;
 
 	cout << "\t\t A \t\t    Q \t    Q_-1" << endl;
-	cout << "ÃÊ±â»óÅÂ: ";
+	cout << "ì´ˆê¸°ìƒíƒœ: ";
 	print(A, Q, prev);
 
-	/* STEP 2: Q·¹Áö½ºÅÍ ºñÆ® Å©±â(SIZE/2 = 16)¸¸Å­ cycle ¹İº¹ */
+	/* STEP 2: Që ˆì§€ìŠ¤í„° ë¹„íŠ¸ í¬ê¸°(SIZE/2 = 16)ë§Œí¼ cycle ë°˜ë³µ */
 
-	int A_result[SIZE / 2] = { 0 }; // A·¹Áö½ºÅÍ ¿¬»ê °á°ú ÀúÀåÇÒ ÀÓ½Ã º¯¼ö
+	int A_result[SIZE / 2] = { 0 }; // Aë ˆì§€ìŠ¤í„° ì—°ì‚° ê²°ê³¼ ì €ì¥í•  ì„ì‹œ ë³€ìˆ˜
 	int *R = { 0 };
 
 	for (int i = 0; i < size; i++) {
 
-		//cout << "\n\nA·¹Áö½ºÅÍ°ª: ";
+		//cout << "\n\nAë ˆì§€ìŠ¤í„°ê°’: ";
 		//for (int k = 0; k < size; k++)
 		//   cout << A[k];
 
-		//cout << "\n\nM·¹Áö½ºÅÍ°ª: ";
+		//cout << "\n\nMë ˆì§€ìŠ¤í„°ê°’: ";
 		//for (int k = 0; k < size; k++)
 		//   cout << M[k];
 
 		cout << "\ncycle " << i + 1 << endl;
-		if (Q[size - 1] == 0 && prev == 0) { // 00ÀÏ °æ¿ì - just ASR(Arithmatic Shift - Right)
-			cout << "<00ÀÏ °æ¿ì>\n";
+		if (Q[size - 1] == 0 && prev == 0) { // 00ì¼ ê²½ìš° - just ASR(Arithmatic Shift - Right)
+			cout << "<00ì¼ ê²½ìš°>\n";
 			ASR(A, Q, prev, size);
 			//print(A, Q, prev);
 		}
-		else if (Q[size - 1] == 1 && prev == 1) { // 11ÀÏ °æ¿ì - just ASR
-			cout << "<11ÀÏ °æ¿ì>\n";
+		else if (Q[size - 1] == 1 && prev == 1) { // 11ì¼ ê²½ìš° - just ASR
+			cout << "<11ì¼ ê²½ìš°>\n";
 			ASR(A, Q, prev, size);
 			//print(A, Q, prev);
 		}
-		else if (Q[size - 1] == 0 && prev == 1) { // 01ÀÏ °æ¿ì - A + M & ASR
-			cout << "<01ÀÏ °æ¿ì>\n";
+		else if (Q[size - 1] == 0 && prev == 1) { // 01ì¼ ê²½ìš° - A + M & ASR
+			cout << "<01ì¼ ê²½ìš°>\n";
 			if (M[0] != init_M) M = convert_complement(M, size);
 			R = sum(A, M, A_result, size, 0);
-			copy(A, R, size); // A¿¡ A_result°ª µ¤¾î ¾º¿ò
+			copy(A, R, size); // Aì— A_resultê°’ ë®ì–´ ì”Œì›€
 			sprint(A, Q, prev);
 			ASR(A, Q, prev, size);
 			//print(A, Q, prev);
 		}
-		else if (Q[size - 1] == 1 && prev == 0) { // 10ÀÏ °æ¿ì - A + M'(MÀÇ º¸¼ö) & ASR
-			cout << "<10ÀÏ °æ¿ì>\n";
+		else if (Q[size - 1] == 1 && prev == 0) { // 10ì¼ ê²½ìš° - A + M'(Mì˜ ë³´ìˆ˜) & ASR
+			cout << "<10ì¼ ê²½ìš°>\n";
 			if (M_cpl[0] != init_Mcpl) M_cpl = convert_complement(M_cpl, size);
 			R = sum(A, M_cpl, A_result, size, 0);
-			copy(A, R, size); // A¿¡ A_result°ª µ¤¾î ¾º¿ò
+			copy(A, R, size); // Aì— A_resultê°’ ë®ì–´ ì”Œì›€
 			sprint(A, Q, prev);
 			ASR(A, Q, prev, size);
 			//print(A, Q, prev);
 		}
 	}
 
-	/* STEP 3: A¿Í Q·¹Áö½ºÅÍ ÇÕÃÄ¼­ °á°ú·¹Áö½ºÅÍ¿¡ ÀúÀå */
+	/* STEP 3: Aì™€ Që ˆì§€ìŠ¤í„° í•©ì³ì„œ ê²°ê³¼ë ˆì§€ìŠ¤í„°ì— ì €ì¥ */
 	for (int i = 0; i < size; i++) {
 		result[i] = A[i];
 		//cout << result[i];
@@ -316,17 +317,17 @@ int *mul(int *Q, int *M, int *A, int *result, int size) { /* °ö¼À by BOOTH Alg. 
 		//if (j % 4 == 3) cout << "_";
 	}
 
-	////Ãâ·Â È®ÀÎ¿ë
-	//cout << endl << "°á°ú ·¹Áö½ºÅÍ: ";
+	////ì¶œë ¥ í™•ì¸ìš©
+	//cout << endl << "ê²°ê³¼ ë ˆì§€ìŠ¤í„°: ";
 	//for (int i = 0; i < SIZE; i++)
 	//   cout << result[i];
 
 	return result;
 }
 
-int *div(int *Q, int *M, int *A, int *result, int size) { /* ³ª´°¼À - °è»êÇÒ ÀÌÁø¼ö ¹è¿­ 2°³, A·¹Áö½ºÅÍ, Q·¹Áö½ºÅÍ */
-														  /* STEP 1: A·¹Áö½ºÅÍ °ª ¼³Á¤, M·¹Áö½ºÅÍ º¸¼ö°ª ¹Ì¸® ±¸ÇØ³õ±â */
-	int compare[SIZE / 2] = { 0 }; // A, M ¿¬»ê°ªÀÌ¶û ºñ±³ÇÒ ¹è¿­
+int *div(int *Q, int *M, int *A, int *result, int size) { /* ë‚˜ëˆ—ì…ˆ - ê³„ì‚°í•  ì´ì§„ìˆ˜ ë°°ì—´ 2ê°œ, Aë ˆì§€ìŠ¤í„°, Që ˆì§€ìŠ¤í„° */
+														  /* STEP 1: Aë ˆì§€ìŠ¤í„° ê°’ ì„¤ì •, Më ˆì§€ìŠ¤í„° ë³´ìˆ˜ê°’ ë¯¸ë¦¬ êµ¬í•´ë†“ê¸° */
+	int compare[SIZE / 2] = { 0 }; // A, M ì—°ì‚°ê°’ì´ë‘ ë¹„êµí•  ë°°ì—´
 
 	for (int i = 0; i < size; i++) {
 		A[i] = Q[0];
@@ -339,10 +340,10 @@ int *div(int *Q, int *M, int *A, int *result, int size) { /* ³ª´°¼À - °è»êÇÒ ÀÌÁ
 
 	int init_A = A[0];
 
-	int *M_cpl = convert_complement(M, size); // MÀÇ 2ÀÇ º¸¼ö
-	int init_Mcpl = M_cpl[0]; // M'ÀÇ Ã³À½ ºÎÈ£ºñÆ®
+	int *M_cpl = convert_complement(M, size); // Mì˜ 2ì˜ ë³´ìˆ˜
+	int init_Mcpl = M_cpl[0]; // M'ì˜ ì²˜ìŒ ë¶€í˜¸ë¹„íŠ¸
 
-							  /* STEP 2: Q·¹Áö½ºÅÍ ºñÆ® Å©±â(SIZE/2 = 16)¸¸Å­ cycle ¹İº¹ */
+							  /* STEP 2: Që ˆì§€ìŠ¤í„° ë¹„íŠ¸ í¬ê¸°(SIZE/2 = 16)ë§Œí¼ cycle ë°˜ë³µ */
 
 	for (int i = 0; i < size; i++) {
 		//   SL(A, Q, size);
@@ -350,7 +351,7 @@ int *div(int *Q, int *M, int *A, int *result, int size) { /* ³ª´°¼À - °è»êÇÒ ÀÌÁ
 		//      if ()
 	}
 
-	/* STEP 3: A¿Í Q·¹Áö½ºÅÍ ÇÕÃÄ¼­ °á°ú·¹Áö½ºÅÍ¿¡ ÀúÀå */
+	/* STEP 3: Aì™€ Që ˆì§€ìŠ¤í„° í•©ì³ì„œ ê²°ê³¼ë ˆì§€ìŠ¤í„°ì— ì €ì¥ */
 	for (int i = 0; i < size; i++) {
 		result[i] = A[i];
 		//cout << result[i];
@@ -365,27 +366,27 @@ int *div(int *Q, int *M, int *A, int *result, int size) { /* ³ª´°¼À - °è»êÇÒ ÀÌÁ
 }
 
 int *convert_binary(double num, int *arr, int size) {
-	int k = size - 1; // Ä«¿îÆÃ¿ë º¯¼ö
+	int k = size - 1; // ì¹´ìš´íŒ…ìš© ë³€ìˆ˜
 	bool minus = false;
 	bool ieee = false;
 	double R = 0;
-	int count1 = 0; // ÀüÃ¼ °³¼ö
-	int count2 = 0; // Á¤¼ö °³¼ö
+	int count1 = 0; // ì „ì²´ ê°œìˆ˜
+	int count2 = 0; // ì •ìˆ˜ ê°œìˆ˜
 
-	if (num < 0) { // À½¼öÆÇº° --> ÃßÈÄ 2ÀÇ º¸¼ö·Î ¹Ù²ÜÁö °áÁ¤ÇÏ´Âµ¥ »ç¿ëµÊ
+	if (num < 0) { // ìŒìˆ˜íŒë³„ --> ì¶”í›„ 2ì˜ ë³´ìˆ˜ë¡œ ë°”ê¿€ì§€ ê²°ì •í•˜ëŠ”ë° ì‚¬ìš©ë¨
 		num = num * (-1);
 		minus = true;
 	}
 
-	if ((int)num != num) { // ½Ç¼öÆÇº° --> ÃßÈÄ IEEE754 Ç¥ÁØÇüÀ¸·Î ¹Ù²ÜÁö °áÁ¤ÇÏ´Â µ¥ »ç¿ëµÊ
+	if ((int)num != num) { // ì‹¤ìˆ˜íŒë³„ --> ì¶”í›„ IEEE754 í‘œì¤€í˜•ìœ¼ë¡œ ë°”ê¿€ì§€ ê²°ì •í•˜ëŠ” ë° ì‚¬ìš©ë¨
 		ieee = true;
 		R = num - (int)num;
 	}
 
-	for (int i = 0; i < size; i++) // ¹è¿­ ¸ğµÎ 0À¸·Î Ã¤¿ò
+	for (int i = 0; i < size; i++) // ë°°ì—´ ëª¨ë‘ 0ìœ¼ë¡œ ì±„ì›€
 		arr[i] = 0;
 
-	if (ieee) { //½Ç¼öÀÏ ¶§´Â ½Ç¼öºÎ ¸ÕÀú °è»êÇÑ´Ù
+	if (ieee) { //ì‹¤ìˆ˜ì¼ ë•ŒëŠ” ì‹¤ìˆ˜ë¶€ ë¨¼ì € ê³„ì‚°í•œë‹¤
 		do {
 
 			R = R * 2;
@@ -398,11 +399,11 @@ int *convert_binary(double num, int *arr, int size) {
 			count1++;
 			k--;
 
-			cout << "R°ª : " << R << endl;
+			//cout << "Rê°’ : " << R << endl;
 
 		} while (R != 0);
 
-		if (count1) { //ÀÚ¸® ¹Ù²Ù±â
+		if (count1) { //ìë¦¬ ë°”ê¾¸ê¸°
 
 			int swap = count1 - 1;
 			int i = 1;
@@ -415,7 +416,7 @@ int *convert_binary(double num, int *arr, int size) {
 				if (swap <= 0)
 					break;
 
-				//       cout << arr[k] << "arr[" << i + 1 << "]¶û arr[" << k + swap << "]" << arr[k + swap] << " ¹Ù²Ù´Â Áß¤¾¤¾" << endl;
+				//       cout << arr[k] << "arr[" << i + 1 << "]ë‘ arr[" << k + swap << "]" << arr[k + swap] << " ë°”ê¾¸ëŠ” ì¤‘ã…ã…" << endl;
 				//     Sleep(60);
 
 				arr[k + i] = arr[k + swap + i];
@@ -432,7 +433,7 @@ int *convert_binary(double num, int *arr, int size) {
 		//cout << arr[k];
 		num = (int)num / 2;
 		count1++;
-		count2++; // Á¤¼öºÎºĞ
+		count2++; // ì •ìˆ˜ë¶€ë¶„
 		if (num == 1) {
 			arr[k - 1] = 1;
 			break;
@@ -440,12 +441,12 @@ int *convert_binary(double num, int *arr, int size) {
 		else k--;
 	}
 
-	if (ieee) { // À§¿¡¼­ ½Ç¼ö¶ó´Â °Ô È®ÀÎµÇ¾ú´Ù¸é ieee Ç¥ÁØÀ¸·Î º¯È¯µÊ
+	if (ieee) { // ìœ„ì—ì„œ ì‹¤ìˆ˜ë¼ëŠ” ê²Œ í™•ì¸ë˜ì—ˆë‹¤ë©´ ieee í‘œì¤€ìœ¼ë¡œ ë³€í™˜ë¨
 		convert_ieee(arr, count1, count2, minus);
-		minus = false; // ½Ç¼ö´Â º¸¼ö·Î ¹Ù²Ü ÇÊ¿äx
+		minus = false; // ì‹¤ìˆ˜ëŠ” ë³´ìˆ˜ë¡œ ë°”ê¿€ í•„ìš”x
 	}
 
-	if (minus) { // À§¿¡¼­ À½¼ö¶ó´Â°Ô È®ÀÎµÇ¾ú´Ù¸é 2ÀÇ º¸¼ö·Î º¯È¯µÊ
+	if (minus) { // ìœ„ì—ì„œ ìŒìˆ˜ë¼ëŠ”ê²Œ í™•ì¸ë˜ì—ˆë‹¤ë©´ 2ì˜ ë³´ìˆ˜ë¡œ ë³€í™˜ë¨
 		convert_complement(arr, size);
 	}
 
@@ -460,27 +461,28 @@ int *convert_ieee(int *arr, int count1, int count2, bool minus) {
 	int k = 8;
 	int j = 31;
 
-	ieee1[0] = minus; // ºÎÈ£ºñÆ®
+	ieee1[0] = minus; // ë¶€í˜¸ë¹„íŠ¸
 
+/*
 	for (j; j - count1<32; j++) {
 
 		ieee1[k] = arr[j - count1];
 
-		cout << k << "°¡¼öºÎ ³Ö´Â Áß" << endl;
+		cout << k << "ê°€ìˆ˜ë¶€ ë„£ëŠ” ì¤‘" << endl;
 		cout << ieee1[k] << endl;
 
 		k++;
 
-	}
+	}*/
 
-	count2 = count2 + 127; // ¹ÙÀÌ¾î½º °ª ´õÇØÁÖ±â
+	count2 = count2 + 127; // ë°”ì´ì–´ìŠ¤ ê°’ ë”í•´ì£¼ê¸°
 
 	int *exp = convert_binary((double)count2, exp1, 8);
 
 	k = 8;
 	j = 7;
 
-	while (1) { // Áö¼öºÎ Áı¾î³Ö±â
+	while (1) { // ì§€ìˆ˜ë¶€ ì§‘ì–´ë„£ê¸°
 
 		ieee1[k] = exp[j];
 
@@ -491,26 +493,64 @@ int *convert_ieee(int *arr, int count1, int count2, bool minus) {
 			break;
 	}
 	cout << endl;
-	cout << "Áö¼öºÎ ´Ù ³ÖÀ½" << endl;
-
-	for (int i = 0; i < SIZE; i++)
-		cout << ieee1[i];
-	cout << endl;
+	//cout << "ì§€ìˆ˜ë¶€ ë‹¤ ë„£ìŒ" << endl;
 
 	for (int i = 0; i<SIZE; i++) {
 		arr[i] = ieee1[i];
 	}
 
-	for (int i = 0; i < SIZE; i++)
-		cout << arr[i];
-	cout << endl;
+	ieee_exception(arr);
+
+	if (!ieee_exception(arr)) {
+		for (int i = 0; i < SIZE; i++)
+			cout << arr[i];
+		cout << endl;
+	}
 
 	return arr;
-
 }
 
-void ieee_exception() {
+bool ieee_exception(int *arr) {
+	int i = 0, j = 0;
+	int sum_up = 0;
+	int sum_down = 0;
+	/*
+	11111111 00101000101  -> NaN
+	11111111 0000...0000  -> ì˜¤ë²„í”Œë¡œìš°
+	11111110 1111...11111 -> ìµœëŒ€ì •ìƒìˆ˜
+	......
+	00000001 000.....0000 -> ìµœì†Œì •ìƒìˆ˜
+	00000000 111.....0010 -> ì–¸ë”í”Œë¡œìš°
+	00000000 0000....0000 -> zero
+	*/
 
+	for (i = 8; i > 0; i--, j++) { //ì§€ìˆ˜ë¶€ 10ì§„ìˆ˜ ë³€í™˜í•´ì„œ ë”í•˜ê¸° --> ì˜ˆì™¸ì²˜ë¦¬ ì‹œê°ì ìœ¼ë¡œ ë³´ê¸° í¸í•˜ë„ë¡
+		sum_up += arr[i] * pow(10, j);
+	}
+
+	for (i = 0; i < 23; i++) { //ê°€ìˆ˜ë¶€ ë°°ì—´ ì „ì²´ì˜ í•© êµ¬í•˜ê¸° --> '1ì´ í•œê°œë¼ë„ ìˆê±°ë‚˜, ì—†ê±°ë‚˜'ë¡œ êµ¬ë¶„ê°€ëŠ¥í•˜ê¸° ë•Œë¬¸
+		sum_down += arr[9 + i];
+	}
+
+	if (sum_up == 11111111 && sum_down == 0) {
+		cout << "ì˜¤ë²„í”Œë¡œìš° ì…ë‹ˆë‹¤." << endl;
+		return false;
+	}
+	else if (sum_up == 11111111 && sum_down >= 1) {
+		cout << "NaN ì…ë‹ˆë‹¤." << endl;
+		return false;
+	}
+	else if (sum_up == 0 && sum_down == 0) {
+		cout << "Zero ì…ë‹ˆë‹¤." << endl;
+		return false;
+	}
+	else if (sum_up == 0 && sum_down >= 1) {
+		cout << "ì–¸ë”í”Œë¡œìš° ì…ë‹ˆë‹¤." << endl;
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 double ieee_to_10(int* arr) {
@@ -521,11 +561,11 @@ double ieee_to_10(int* arr) {
 	double a = 0, b = 0;
 	int i = 0, j = 0;
 
-	for (i = 8, j = 0; i > 0; i--, j++) { //Áö¼öºÎÀÇ 10Áø¼ö È­
+	for (i = 8, j = 0; i > 0; i--, j++) { //ì§€ìˆ˜ë¶€ì˜ 10ì§„ìˆ˜ í™”
 		sum_up += arr[i] * pow(2, j);
 	}
 
-	for (i = (SIZE - 1); i >= 0; i--) { //xÀÇ °¡¼öºÎ ±æÀÌ ±¸ÇÏ±â
+	for (i = (SIZE - 1); i >= 0; i--) { //xì˜ ê°€ìˆ˜ë¶€ ê¸¸ì´ êµ¬í•˜ê¸°
 		if (arr[i] == 1) {
 
 			break;
@@ -537,16 +577,16 @@ double ieee_to_10(int* arr) {
 
 	temp = SIZE - 9 - temp;
 
-	for (i = 0; i < temp; i++) { //°¡¼öºÎ ³ÖÀ» »õ·Î¿î ¹è¿­ Ãß°¡
+	for (i = 0; i < temp; i++) { //ê°€ìˆ˜ë¶€ ë„£ì„ ìƒˆë¡œìš´ ë°°ì—´ ì¶”ê°€
 		arr_down[1 + i] = arr[9 + i];
 	}
-	arr_down[0] = 1; //»ı·«µÇ¾ú´ø 1 Ãß°¡
+	arr_down[0] = 1; //ìƒëµë˜ì—ˆë˜ 1 ì¶”ê°€
 
-	for (i = sum_up, j = 0; i >= 0; i--, j++) {//Á¤¼öºÎ ÇÕ
+	for (i = sum_up, j = 0; i >= 0; i--, j++) {//ì •ìˆ˜ë¶€ í•©
 		a += arr_down[i] * pow(2, j);
 	}
 
-	for (i = sum_up + 1, j = 0; i < 24; i++, j++) {//¼Ò¼öºÎ ÇÕ
+	for (i = sum_up + 1, j = 0; i < 24; i++, j++) {//ì†Œìˆ˜ë¶€ í•©
 		b += arr_down[i] * pow(2, -1 * j);
 	}
 
@@ -566,12 +606,12 @@ void *ieee_sum(int *x, int *y) {
 	int j = 0;
 	int i = 0;
 
-	for (i = 8, j = 0; i > 0; i--, j++) { //Áö¼öºÎÀÇ 10Áø¼ö È­
+	for (i = 8, j = 0; i > 0; i--, j++) { //ì§€ìˆ˜ë¶€ì˜ 10ì§„ìˆ˜ í™”
 		sum_up_X += x[i] * pow(2, j);
 		sum_up_Y += y[i] * pow(2, j);
 	}
 
-	for (i = (SIZE - 1); i >= 0; i--) { //xÀÇ °¡¼öºÎ ±æÀÌ ±¸ÇÏ±â
+	for (i = (SIZE - 1); i >= 0; i--) { //xì˜ ê°€ìˆ˜ë¶€ ê¸¸ì´ êµ¬í•˜ê¸°
 		if (x[i] == 1) {
 
 			break;
@@ -591,13 +631,13 @@ void *ieee_sum(int *x, int *y) {
 		}
 	}
 
-	length_down_X = SIZE - 9 - length_down_X; //°¡¼öºÎ ±æÀÌ °è»ê
+	length_down_X = SIZE - 9 - length_down_X; //ê°€ìˆ˜ë¶€ ê¸¸ì´ ê³„ì‚°
 	length_down_Y = SIZE - 9 - length_down_Y;
 
 	sum_up_X = sum_up_X - 127 - length_down_X;
-	sum_up_Y = sum_up_Y - 127 - length_down_Y; //¼Ò¼ıÁ¡ À§Ä¡ ¸ÂÃá ÈÄÀÇ Áö¼ö °ª °è»ê
+	sum_up_Y = sum_up_Y - 127 - length_down_Y; //ì†Œìˆ«ì  ìœ„ì¹˜ ë§ì¶˜ í›„ì˜ ì§€ìˆ˜ ê°’ ê³„ì‚°
 
-	if (sum_up_X >= sum_up_Y) {//Áö¼ö³¢¸®ÀÇ Â÷ ±¸ÇÏ±â
+	if (sum_up_X >= sum_up_Y) {//ì§€ìˆ˜ë¼ë¦¬ì˜ ì°¨ êµ¬í•˜ê¸°
 		sub_up_XY = sum_up_X - sum_up_Y;
 
 	}
@@ -617,15 +657,15 @@ void *ieee_sum(int *x, int *y) {
 
 
 	int x_2[32] = { 0 };
-	int y_2[32] = { 0 }; //////////////////////////////////////////////////////////////µ¿ÀûÇÒ´ç 
+	int y_2[32] = { 0 }; //////////////////////////////////////////////////////////////ë™ì í• ë‹¹ 
 
 	for (i = 0, j = 31; i < sub_up_XY; i++, j--) {
 		x_2[j] = 0;
 	}
 	for (i = 0, j = length_down_X; j >= 0; i++, j--) {
 		if (j = 0) {
-			x_2[31 - sub_up_XY - i] = 1;//»ı·«µÈ 1 ³Ö±â
-			x_2[30 - sub_up_XY - i] = x[0];//¸Ç ¾Õ¿¡ ºÎÈ£ºñÆ® ³Ö±â
+			x_2[31 - sub_up_XY - i] = 1;//ìƒëµëœ 1 ë„£ê¸°
+			x_2[30 - sub_up_XY - i] = x[0];//ë§¨ ì•ì— ë¶€í˜¸ë¹„íŠ¸ ë„£ê¸°
 			break;
 		}
 		x_2[31 - sub_up_XY - i] = x[8 + length_down_X - i];
@@ -636,8 +676,8 @@ void *ieee_sum(int *x, int *y) {
 	}
 	for (i = 0, j = length_down_Y; j>-0; i++, j--) {
 		if (j = 0) {
-			y_2[31 - sub_up_XY - i] = 1; //»ı·«µÈ 1 ³Ö±â
-			y_2[30 - sub_up_XY - i] = y[0]; //¸Ç ¾Õ¿¡ ºÎÈ£ºñÆ® ³Ö±â
+			y_2[31 - sub_up_XY - i] = 1; //ìƒëµëœ 1 ë„£ê¸°
+			y_2[30 - sub_up_XY - i] = y[0]; //ë§¨ ì•ì— ë¶€í˜¸ë¹„íŠ¸ ë„£ê¸°
 			break;
 		}
 		y_2[31 - sub_up_YX - i] = y[8 + length_down_Y - i];
@@ -646,7 +686,7 @@ void *ieee_sum(int *x, int *y) {
 	sum(x_2, y_2,sum_down,32,0);
 
 
-	for (i = 0; i < 32; i++) {//°¡¼öºÎ ÇÕÀÇ ±æÀÌ ±¸ÇÏ±â
+	for (i = 0; i < 32; i++) {//ê°€ìˆ˜ë¶€ í•©ì˜ ê¸¸ì´ êµ¬í•˜ê¸°
 		if (sum_down[i] == 1) {
 			break;
 		}
@@ -655,49 +695,49 @@ void *ieee_sum(int *x, int *y) {
 
 	temp = 32 - temp;
 
-	sum_up_X = temp - sum_up_X; //Áö¼öºÎ Á¤±ÔÈ­
+	sum_up_X = temp - sum_up_X; //ì§€ìˆ˜ë¶€ ì •ê·œí™”
 
 	for (i = 0; temp + i < 32; i++) {
-		sum_final[9 + i] = sum_down[temp + 2 + i]; //Ã¹ ¼ıÀÚ 2°³(ºÎÈ£ºñÆ®, 1»ı·«)¸¦ »©¾ßÇÏ¹Ç·Î sum_down[temp+2+i]
+		sum_final[9 + i] = sum_down[temp + 2 + i]; //ì²« ìˆ«ì 2ê°œ(ë¶€í˜¸ë¹„íŠ¸, 1ìƒëµ)ë¥¼ ë¹¼ì•¼í•˜ë¯€ë¡œ sum_down[temp+2+i]
 	}
 
 	for (i = 0; i < 8; i++) {
 		sum_final[1 + i] = sum_up_final[i];
 	}
 
-	sum_final[0] = sum_down[temp]; //ºÎÈ£ºñÆ® ³Ö±â
+	sum_final[0] = sum_down[temp]; //ë¶€í˜¸ë¹„íŠ¸ ë„£ê¸°
 
-								   /////////////////////////////////////////////////////////////////////¿¹¿ÜÃ³¸®ÇÏ±â
+								   /////////////////////////////////////////////////////////////////////ì˜ˆì™¸ì²˜ë¦¬í•˜ê¸°
 
 	for (i = 0; i < 32; i++) {
-		cout << "°è»ê ÈÄ ieee754Çü½Ä : " << sum_final[i] << endl;
+		cout << "ê³„ì‚° í›„ ieee754í˜•ì‹ : " << sum_final[i] << endl;
 	}
 
-	cout << "°è»ê ÈÄ 10Áø¼ö Çü½Ä : " << ieee_to_10(sum_final);
+	cout << "ê³„ì‚° í›„ 10ì§„ìˆ˜ í˜•ì‹ : " << ieee_to_10(sum_final);
 
 
 	return 0;
 }
 
-void ieee_multipler(int* arr1, int* arr2) { //¿©±â¼­ °ª Ãâ·ÂÇÏ°í ³¡³¾ °ÍÀÓ...
+void ieee_multipler(int* arr1, int* arr2) { //ì—¬ê¸°ì„œ ê°’ ì¶œë ¥í•˜ê³  ëë‚¼ ê²ƒì„...
 
 	int result[SIZE] = { 0 };
 	int arr11[24] = { 0 };
-	int arr22[24] = { 0 }; // ¿¬»ê À§ÇØ ±âÁ¸ÀÇ °¡¼öºÎ¸¦ ÀúÀåÇÒ ¹è¿­µé
+	int arr22[24] = { 0 }; // ì—°ì‚° ìœ„í•´ ê¸°ì¡´ì˜ ê°€ìˆ˜ë¶€ë¥¼ ì €ì¥í•  ë°°ì—´ë“¤
 	int count1 = 0;
-	int   count2 = 0; //Áö¼ö°ª
+	int   count2 = 0; //ì§€ìˆ˜ê°’
 	int k1 = 0;
-	int k2 = 0; // °¡¼öºÎ ÀÚ¸´¼ö
-	int m = 0; //ÃÑ °¡¼öºÎ ÀÚ¸´¼ö
+	int k2 = 0; // ê°€ìˆ˜ë¶€ ìë¦¿ìˆ˜
+	int m = 0; //ì´ ê°€ìˆ˜ë¶€ ìë¦¿ìˆ˜
 	int n = 1;
-	int num = 0; //ÃÑ Áö¼ö½Â °ª
-	bool minus = false; // ÃÑ ¿¬»ê °á°úÀÇ ºÎÈ£
+	int num = 0; //ì´ ì§€ìˆ˜ìŠ¹ ê°’
+	bool minus = false; // ì´ ì—°ì‚° ê²°ê³¼ì˜ ë¶€í˜¸
 
 	if (arr1[0] != arr2[0])
 		minus = true;
 	else
 		minus = false;
-	//ÀÌ ¿¬»êÀÇ ºÎÈ£ ±¸ÇÏ±â
+	//ì´ ì—°ì‚°ì˜ ë¶€í˜¸ êµ¬í•˜ê¸°
 
 	for (int i = 8; i>0; i--) {
 		count1 += arr1[i] * n;
@@ -714,7 +754,7 @@ void ieee_multipler(int* arr1, int* arr2) { //¿©±â¼­ °ª Ãâ·ÂÇÏ°í ³¡³¾ °ÍÀÓ...
 	}
 
 	count2 = count2 - 127;
-	// Áö¼ö½Â 10Áø¼ö º¯È¯
+	// ì§€ìˆ˜ìŠ¹ 10ì§„ìˆ˜ ë³€í™˜
 
 	for (int i = SIZE - 1; i>9; i--) {
 		k1 = i;
@@ -725,7 +765,7 @@ void ieee_multipler(int* arr1, int* arr2) { //¿©±â¼­ °ª Ãâ·ÂÇÏ°í ³¡³¾ °ÍÀÓ...
 	}
 
 	k1 = k1 - 8;
-	//   cout << "arr1ÀÇ °¡¼ö ÀÚ¸®: " <<k1<< endl;
+	//   cout << "arr1ì˜ ê°€ìˆ˜ ìë¦¬: " <<k1<< endl;
 
 	for (int i = SIZE - 1; i>9; i--) {
 		k2 = i;
@@ -736,40 +776,40 @@ void ieee_multipler(int* arr1, int* arr2) { //¿©±â¼­ °ª Ãâ·ÂÇÏ°í ³¡³¾ °ÍÀÓ...
 	}
 
 	k2 = k2 - 8;
-	//¼Ò¼öÁ¡ ¸î ÀÚ¸®ÀÎÁö ±¸ÇÏ±â
+	//ì†Œìˆ˜ì  ëª‡ ìë¦¬ì¸ì§€ êµ¬í•˜ê¸°
 
-	//   cout << "arr2ÀÇ °¡¼ö ÀÚ¸®: " <<k2<< endl;
+	//   cout << "arr2ì˜ ê°€ìˆ˜ ìë¦¬: " <<k2<< endl;
 
-	for (int i = 0; i <= k1; i++) { // ¿¬»ê À§ÇØ ´Ù¸¥ ¹è¿­¿¡ Áı¾î³Ö±â
+	for (int i = 0; i <= k1; i++) { // ì—°ì‚° ìœ„í•´ ë‹¤ë¥¸ ë°°ì—´ì— ì§‘ì–´ë„£ê¸°
 		arr11[24 - 1 - i] = arr1[8 + k1 - i];
 		if (i == k1)
 			arr11[24 - 1 - i] = 1;
 	}
 
-	for (int i = 0; i <= k2; i++) { // ¿¬»ê À§ÇØ ´Ù¸¥ ¹è¿­¿¡ Áı¾î³Ö±â
+	for (int i = 0; i <= k2; i++) { // ì—°ì‚° ìœ„í•´ ë‹¤ë¥¸ ë°°ì—´ì— ì§‘ì–´ë„£ê¸°
 		arr22[24 - 1 - i] = arr2[8 + k2 - i];
 		if (i == k2)
 			arr22[24 - 1 - i] = 1;
 	}
 
-	cout << "arr11 : ";
+	//cout << "arr11 : ";
 	for (int i = 0; i<24; i++)
-		cout << arr11[i]; // °á°ú Ãâ·Â
+		cout << arr11[i]; // ê²°ê³¼ ì¶œë ¥
 	cout << endl;
 
-	cout << "arr22 : ";
+	//cout << "arr22 : ";
 	for (int i = 0; i<24; i++)
-		cout << arr22[i]; // °á°ú Ãâ·Â
+		cout << arr22[i]; // ê²°ê³¼ ì¶œë ¥
 	cout << endl;
 
-	for (int j = 0; j<k1 + 1; j++) { //°¡¼öºÎ °ö¼À ¼öÇà
+	for (int j = 0; j<k1 + 1; j++) { //ê°€ìˆ˜ë¶€ ê³±ì…ˆ ìˆ˜í–‰
 		for (int i = 0; i<k2 + 1; i++) {
 			result[SIZE - 1 - j - i] += arr11[24 - 1 - i] * arr22[24 - 1 - j];
 
-			cout << result[SIZE - 1 - j - i] << " += " << arr11[24 - 1 - i] << " * " << arr22[24 - 1 - j] << endl;
-			cout << "result´Â " << SIZE - 1 - j - i << "¹øÂ°, arr11Àº " << 24 - 1 - i << "¹øÂ°, arr2´Â " << 24 - 1 - j << "¹øÂ°" << endl;
+			//cout << result[SIZE - 1 - j - i] << " += " << arr11[24 - 1 - i] << " * " << arr22[24 - 1 - j] << endl;
+			//cout << "resultëŠ” " << SIZE - 1 - j - i << "ë²ˆì§¸, arr11ì€ " << 24 - 1 - i << "ë²ˆì§¸, arr2ëŠ” " << 24 - 1 - j << "ë²ˆì§¸" << endl;
 
-			if (result[SIZE - 1 - j - i]>1) { // 2³ª 3 °°ÀÌ ÀÌÁø¼ö·Î Ç¥ÇöÇÒ ¼ö ÀÖ´Â ¼ö°¡ ÃÊ°úµÇ¾úÀ» ¶§ ¹Ù²ãÁÖ±â
+			if (result[SIZE - 1 - j - i]>1) { // 2ë‚˜ 3 ê°™ì´ ì´ì§„ìˆ˜ë¡œ í‘œí˜„í•  ìˆ˜ ìˆëŠ” ìˆ˜ê°€ ì´ˆê³¼ë˜ì—ˆì„ ë•Œ ë°”ê¿”ì£¼ê¸°
 				result[SIZE - 2 - j - i] += result[SIZE - 1 - j - i] / 2;
 				result[SIZE - 1 - j - i] = result[SIZE - 1 - j - i] % 2;
 			}
@@ -778,12 +818,12 @@ void ieee_multipler(int* arr1, int* arr2) { //¿©±â¼­ °ª Ãâ·ÂÇÏ°í ³¡³¾ °ÍÀÓ...
 		}
 	}
 
-	cout << "°ö¼À ¼öÇà °á°ú : ";
+	cout << "ê³±ì…ˆ ìˆ˜í–‰ ê²°ê³¼ : ";
 	for (int i = 0; i<SIZE; i++)
-		cout << result[i]; // °á°ú Ãâ·Â
+		cout << result[i]; // ê²°ê³¼ ì¶œë ¥
 	cout << endl;
 
-	for (int i = 0; i<SIZE; i++) { //±¸ÇÑ °ö¼ÀÀÌ ¸î ÀÚ¸®ÀÎÁö ±¸ÇÏ±â
+	for (int i = 0; i<SIZE; i++) { //êµ¬í•œ ê³±ì…ˆì´ ëª‡ ìë¦¬ì¸ì§€ êµ¬í•˜ê¸°
 		m++;
 		if (result[i] == 0)
 			continue;
@@ -792,20 +832,20 @@ void ieee_multipler(int* arr1, int* arr2) { //¿©±â¼­ °ª Ãâ·ÂÇÏ°í ³¡³¾ °ÍÀÓ...
 	}
 
 	m = 32 - m;
-	cout << "m°ª : " << m << endl;
+	//cout << "mê°’ : " << m << endl;
 	num = count1 + count2;
 	//   cout << count1 << " + " << count2 << endl;
 
 	if (k1 + k2 != m) {
 		num += m - k1 - k2;
-		cout << "num°ª : " << num << endl;
+		cout << "numê°’ : " << num << endl;
 	}
 
 	int *ieee = convert_ieee(result, m, num, minus);
 
-	cout << "ÃÖÁ¾ °ö¼À ¼öÇà °á°ú : ";
+	cout << "ìµœì¢… ê³±ì…ˆ ìˆ˜í–‰ ê²°ê³¼ : ";
 	for (int i = 0; i<SIZE - 1; i++)
-		cout << ieee[i]; // °á°ú Ãâ·Â
+		cout << ieee[i]; // ê²°ê³¼ ì¶œë ¥
 	cout << endl;
 
 	return;
@@ -814,15 +854,15 @@ void ieee_multipler(int* arr1, int* arr2) { //¿©±â¼­ °ª Ãâ·ÂÇÏ°í ³¡³¾ °ÍÀÓ...
 void ieee_divider(int* arr1, int* arr2) {
 
 	int result[SIZE] = { 0 };
-	int num = 0; // Áö¼ö½Â °ª
+	int num = 0; // ì§€ìˆ˜ìŠ¹ ê°’
 
 
 
 				 //   int *ieee =   convert_ieee(result,m,num,minus);
 
-	cout << "ÃÖÁ¾ ³ª´°¼À ¼öÇà °á°ú : ";
+	cout << "ìµœì¢… ë‚˜ëˆ—ì…ˆ ìˆ˜í–‰ ê²°ê³¼ : ";
 	//   for(int i=0; i<SIZE-1; i++)
-	//      cout << ieee[i]; // °á°ú Ãâ·Â
+	//      cout << ieee[i]; // ê²°ê³¼ ì¶œë ¥
 	//   cout << endl;
 
 	return;
@@ -833,75 +873,80 @@ void main() {
 	double b;
 	int A[SIZE];
 	int B[SIZE];
-	int sumarr[SIZE] = { 0 }; // µ¡¼À°á°ú ÀúÀå ¹è¿­
-							  /* °ö¼À¿¬»ê¿ë º¯¼ö */
+	int sumarr[SIZE] = { 0 }; // ë§ì…ˆê²°ê³¼ ì €ì¥ ë°°ì—´
+							  /* ê³±ì…ˆì—°ì‚°ìš© ë³€ìˆ˜ */
 	int a_register[SIZE / 2] = { 0 };
 	int q_register[SIZE / 2] = { 0 };
 	int m_register[SIZE / 2] = { 0 };
 	int result_mul[SIZE] = { 0 };
 	bool ieeea = false;
 
-	cout << "µÎ ¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä: ";
+	cout << "ë‘ ìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”: ";
 	cin >> a >> b;
 
 	int *x = convert_binary(a, A, SIZE);
 	int *y = convert_binary(b, B, SIZE);
 
+
+
 	if ((int)a != a)
 		ieeea = true;
 
-	cout << "[" << a << "]ÀÇ 2Áø¼ö º¯È¯" << endl;
-	if (a < 0) cout << "(2ÀÇº¸¼ö·Î º¯È¯µÊ)" << endl;
+	cout << "[" << a << "]ì˜ 2ì§„ìˆ˜ ë³€í™˜ : ";
+	if (a < 0) cout << "(2ì˜ë³´ìˆ˜ë¡œ ë³€í™˜ë¨)" << endl;
 	for (int i = 0; i < SIZE; i++)
 		cout << x[i];
 	cout << endl;
 
-	cout << "[" << b << "]ÀÇ 2Áø¼ö º¯È¯" << endl;
-	if (b < 0) cout << "(2ÀÇº¸¼ö·Î º¯È¯µÊ)" << endl;
+	cout << "[" << b << "]ì˜ 2ì§„ìˆ˜ ë³€í™˜ : ";
+	if (b < 0) cout << "(2ì˜ë³´ìˆ˜ë¡œ ë³€í™˜ë¨)" << endl;
 	for (int i = 0; i < SIZE; i++)
 		cout << y[i];
 	cout << endl;
 
 	if (!ieeea) {
 		int *result = sum(x, y, sumarr, SIZE, true);
-		cout << "µÎ ¼öÀÇ µ¡¼À: " << endl;
+		cout << "ë‘ ìˆ˜ì˜ ë§ì…ˆ: " << endl;
 		for (int i = 0; i < SIZE; i++)
 			cout << result[i];
 		cout << endl;
 
 
-		int test = convert_decimal(result, SIZE); // 32ºñÆ®ÀÇ ½ÊÁø¼ö º¯È¯
-		cout << "µ¡¼À °á°ú°ª ½ÊÁø¼ö º¯È¯ °á°ú: " << test << endl;
+		int test = convert_decimal(result, SIZE); // 32ë¹„íŠ¸ì˜ ì‹­ì§„ìˆ˜ ë³€í™˜
+		cout << "ë§ì…ˆ ê²°ê³¼ê°’ ì‹­ì§„ìˆ˜ ë³€í™˜ ê²°ê³¼: " << test << endl;
 
 		cout << "\n*\t*\t*\t*\t*\t*\t*";
 
 		if (abs(a) >= pow((double)2, SIZE / 2) || abs(b) >= pow((double)2, SIZE / 2))
-			cout << "¼öÀÇ ¹üÀ§¸¦ ÃÊ°úÇÏ¿© °ö¼À ¿¬»êÀÌ ºÒ°¡´ÉÇÕ´Ï´Ù." << endl;
-		else { // p, q´Â 16ºñÆ®·Î º¯È¯ÇÑ ÀÌÁø¼ö
+			cout << "ìˆ˜ì˜ ë²”ìœ„ë¥¼ ì´ˆê³¼í•˜ì—¬ ê³±ì…ˆ ì—°ì‚°ì´ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤." << endl;
+		else { // p, qëŠ” 16ë¹„íŠ¸ë¡œ ë³€í™˜í•œ ì´ì§„ìˆ˜
 			int *p = convert_binary(a, q_register, SIZE / 2);
 			int *q = convert_binary(b, m_register, SIZE / 2);
 
-			int *result2 = mul(p, q, a_register, result_mul, SIZE / 2); // Q, M, A, A¿Í Q ÇÕÃÄ¼­ Ãâ·ÂÇÏ´Â °á°ú ·¹Áö½ºÅÍ
+			int *result2 = mul(p, q, a_register, result_mul, SIZE / 2); // Q, M, A, Aì™€ Q í•©ì³ì„œ ì¶œë ¥í•˜ëŠ” ê²°ê³¼ ë ˆì§€ìŠ¤í„°
 
-			cout << "\n°ö¼À ÈÄ: ";
+			cout << "\nê³±ì…ˆ í›„: ";
 			for (int i = 0; i < SIZE; i++)
 				cout << result2[i];
 			cout << endl;
 
-			int test2 = convert_decimal(result2, SIZE); // 32ºñÆ®ÀÇ ½ÊÁø¼ö º¯È¯
-			cout << "\n½ÊÁø¼ö º¯È¯ °á°ú: " << test2 << endl;
+			int test2 = convert_decimal(result2, SIZE); // 32ë¹„íŠ¸ì˜ ì‹­ì§„ìˆ˜ ë³€í™˜
+			cout << "\nì‹­ì§„ìˆ˜ ë³€í™˜ ê²°ê³¼: " << test2 << endl;
 		}
 	}
+	if (ieee_exception(x) && ieee_exception(y)) { //ieee ì˜ˆì™¸ì²˜ë¦¬
 
-	if (ieeea)
-		ieee_multipler(x, y);
-	if (ieeea)
-		ieee_divider(x, y);
+		if (ieeea)
+			ieee_multipler(x, y);
+		if (ieeea)
+			ieee_divider(x, y);
+	}
+
 
 	return;
 }
 
-void Signbit(int num) { // °è»êÇÑ °ªÀ» ¹ŞÀ½
+void Signbit(int num) { // ê³„ì‚°í•œ ê°’ì„ ë°›ìŒ
 
 	if (num<0)
 		cout << "S bit : 1" << endl;
@@ -913,7 +958,7 @@ void Signbit(int num) { // °è»êÇÑ °ªÀ» ¹ŞÀ½
 }
 
 
-void Carrybit(int num) { //µÎ ¼öÀÇ ¸Ç ³¡ÀÚ¸® ¼ö ÇÏ³ª¸¸ ¹Ş´Â´Ù.
+void Carrybit(int num) { //ë‘ ìˆ˜ì˜ ë§¨ ëìë¦¬ ìˆ˜ í•˜ë‚˜ë§Œ ë°›ëŠ”ë‹¤.
 
 	if (num > 1)
 		cout << "C bit : 1" << endl;
@@ -925,7 +970,7 @@ void Carrybit(int num) { //µÎ ¼öÀÇ ¸Ç ³¡ÀÚ¸® ¼ö ÇÏ³ª¸¸ ¹Ş´Â´Ù.
 }
 
 
-void Zerobit(int* num) { // °è»ê ¿Ï·áµÈ °ª ¹Ş±â
+void Zerobit(int* num) { // ê³„ì‚° ì™„ë£Œëœ ê°’ ë°›ê¸°
 
 	for (int i = 0; i<SIZE - 1; i++) {
 		if (num[i] == 0)
@@ -942,9 +987,9 @@ void Zerobit(int* num) { // °è»ê ¿Ï·áµÈ °ª ¹Ş±â
 }
 
 
-void Overbit(int carry1, int carry2) { // ³¡¿¡¼­ µÎ ¹øÂ°ÆÇ¸íµÈ CºñÆ® ¹Ş±â
+void Overbit(int carry1, int carry2) { // ëì—ì„œ ë‘ ë²ˆì§¸íŒëª…ëœ Cë¹„íŠ¸ ë°›ê¸°
 
-	if (carry1 + carry2>3) // Ä³¸®°ªÀÌ ÀÖ´Ù¸é 2 ÀÌ»óÀÏ °ÍÀÓ... ÇÏ³ª±îÁø ±¦ÂúÀ¸¹Ç·Î 3º¸´Ù Å¬ °æ¿ì¿£ ³»ºÎ+¿ÜºÎ ´Ù ÀÏ¾î³­ °æ¿ì·Î Ä£´Ù
+	if (carry1 + carry2>3) // ìºë¦¬ê°’ì´ ìˆë‹¤ë©´ 2 ì´ìƒì¼ ê²ƒì„... í•˜ë‚˜ê¹Œì§„ ê´œì°®ìœ¼ë¯€ë¡œ 3ë³´ë‹¤ í´ ê²½ìš°ì—” ë‚´ë¶€+ì™¸ë¶€ ë‹¤ ì¼ì–´ë‚œ ê²½ìš°ë¡œ ì¹œë‹¤
 		cout << "V bit : 1" << endl;
 	else
 		cout << "V bit : 0" << endl;
