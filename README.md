@@ -8,7 +8,7 @@ Computer Architecture Team Project #1
 - [X] 십진수 변환
 - [X] 2의 보수 변환
 - [X] 덧셈(뺄셈) 연산
-- [ ] 곱셈 by Booth Algorithm
+- [X] 곱셈 by Booth Algorithm
 - [ ] 나눗셈
 - [ ] 상태비트 출력 (C, V, S, Z)
 
@@ -27,5 +27,4 @@ Computer Architecture Team Project #1
 이혜진(@melthleeth) <br>
 변재호(@bjho606) <br>
 방승희(@tmdgml) <br>
-전진수(@jeonjinsoo) <br>
-손혜진 <br>
+손혜진(@sonhyejin)<br>
